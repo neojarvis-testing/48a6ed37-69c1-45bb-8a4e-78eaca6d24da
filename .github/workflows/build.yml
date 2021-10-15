@@ -1,0 +1,30 @@
+name: Build
+'on':
+  push:
+    branches:
+      - '*'
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Build and analyze
+        env:
+          GITHUB_TOKEN: 48a6ed37-69c1-45bb-8a4e-78eaca6d24da
+          SONAR_TOKEN: e62c84adbcfda79e46a9c096fbf892c15140994b
+        run: >-
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+          -Dsonar.projectKey=neojarvis-testing_48a6ed37-69c1-45bb-8a4e-78eaca6d24da
+          -Dsonar.login=e62c84adbcfda79e46a9c096fbf892c15140994b
